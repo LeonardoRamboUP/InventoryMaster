@@ -8,5 +8,10 @@ namespace InventoryMaster.Data
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         public DbSet<Product> Products { get; set; }
+        public DbSet<Funcionario> Funcionarios { get; set; }
+        public DbSet<Estoque> Estoques { get; set; }
+        public DbSet<Venda> Vendas { get; set; }
+        public DbSet<Carrinho> Carrinhos { get; set; }
+        public DbSet<ItemCarrinho> ItensCarrinho { get; set; }
     }
 }

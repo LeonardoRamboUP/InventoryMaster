@@ -1,5 +1,6 @@
 namespace InventoryMaster.Models
 {
+    // Modelo que representa um produto no sistema
     public class Product
     {
         public int Id { get; set; }

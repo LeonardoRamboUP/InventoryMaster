@@ -1,6 +1,6 @@
 @InventoryMaster_HostAddress = http://localhost:5155
-
-GET {{InventoryMaster_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
+@InventoryMaster_Username = admin
+@InventoryMaster_Password = admin
+@InventoryMaster_Auth = Basic
+@InventoryMaster_AuthHeader = Basic
+@InventoryMaster_AuthHeaderValue = Basic

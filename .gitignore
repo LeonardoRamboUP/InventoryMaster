@@ -1,5 +1,27 @@
+# Arquivos de build
 bin/
 obj/
+*.exe
+*.dll
+*.pdb
+
+# Configurações de usuário
 *.user
 *.suo
+*.userprefs
+
+# Ambiente
 appsettings.Development.json
+.env
+
+# Dependências
+.vs/
+packages/
+
+# Banco de dados
+*.mdf
+*.ldf
+__MigrationHistory/
+
+# Editor (VS Code)
+.vscode/

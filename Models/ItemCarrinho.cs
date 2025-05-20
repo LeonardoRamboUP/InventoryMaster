@@ -13,6 +13,6 @@ namespace InventoryMaster.Models
         public int Quantidade { get; set; }
         public decimal PrecoUnitario { get; set; }
 
-        public Product? Product { get; set; }
+        public Produto? Produto { get; set; }
     }
 }

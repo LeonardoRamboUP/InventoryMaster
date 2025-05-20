@@ -8,47 +8,57 @@ namespace InventoryMaster.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductsController : ControllerBase
+    public class ProdutosController : ControllerBase
     {
         private readonly AppDbContext _context;
 
-        public ProductsController(AppDbContext context)
+        public ProdutosController(AppDbContext context)
         {
             _context = context;
         }
 
         // Retorna todos os produtos
         [HttpGet]
-        public IActionResult GetProducts()
+        public IActionResult GetProdutos()
         {
-            var products = _context.Products.ToList();
-            return Ok(products);
+            var produtos = _context.Produtos.ToList();
+            return Ok(produtos);
         }
 
         // Retorna um produto pelo ID
         [HttpGet("{id}")]
         public IActionResult GetProduct(int id)
         {
-            var product = _context.Products.Find(id);
-            return product == null ? NotFound() : Ok(product);
+            var produto = _context.Produtos.Find(id);
+            return produto == null ? NotFound() : Ok(produto);
         }
 
         // Cria um novo produto
         [HttpPost]
-        public async Task<IActionResult> CreateProduct([FromBody] Product product)
+        public async Task<IActionResult> CreateProduct([FromBody] Produto produto)
         {
-            _context.Products.Add(product);
-            await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, product);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            try
+            {
+                _context.Produtos.Add(produto);
+                await _context.SaveChangesAsync();
+                return CreatedAtAction(nameof(GetProduct), new { id = produto.Id }, produto);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro ao salvar produto: {ex.Message}");
+            }
         }
 
         // Atualiza um produto existente
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateProduct(int id, [FromBody] Product product)
+        public async Task<IActionResult> UpdateProduct(int id, [FromBody] Produto produto)
         {
-            if (id != product.Id) return BadRequest();
+            if (id != produto.Id) return BadRequest();
 
-            _context.Entry(product).State = EntityState.Modified;
+            _context.Entry(produto).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             return NoContent();
         }
@@ -57,22 +67,22 @@ namespace InventoryMaster.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
-            var product = await _context.Products.FindAsync(id);
-            if (product == null) return NotFound();
+            var produto = await _context.Produtos.FindAsync(id);
+            if (produto == null) return NotFound();
 
-            _context.Products.Remove(product);
+            _context.Produtos.Remove(produto);
             await _context.SaveChangesAsync();
             return NoContent();
         }
 
         // Busca produtos por nome
         [HttpGet("search")]
-        public IActionResult SearchProducts([FromQuery] string name)
+        public IActionResult SearchProducts([FromQuery] string nome)
         {
-            var products = _context.Products
-                .Where(p => p.Name.Contains(name))
+            var produtos = _context.Produtos
+                .Where(p => p.Nome.Contains(nome))
                 .ToList();
-            return Ok(products);
+            return Ok(produtos);
         }
 
         // Endpoint protegido por autenticação JWT
@@ -87,7 +97,7 @@ namespace InventoryMaster.Controllers
         [HttpGet("total")]
         public IActionResult GetTotalProducts()
         {
-            var total = _context.Products.Count();
+            var total = _context.Produtos.Count();
             return Ok(new { total });
         }
     }

@@ -24,7 +24,7 @@ namespace InventoryMaster.Controllers
         [HttpGet]
         public IActionResult GetEstoques()
         {
-            var estoques = _context.Estoques.Include(e => e.Product).ToList();
+            var estoques = _context.Estoques.Include(e => e.Produto).ToList();
             return Ok(estoques);
         }
 

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using InventoryMaster.Data;
 using InventoryMaster.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace InventoryMaster.Controllers
 {
@@ -17,6 +18,7 @@ namespace InventoryMaster.Controllers
         }
 
         // Adiciona um item ao carrinho
+        [Authorize]
         [HttpPost("adicionar-item")]
         public async Task<IActionResult> AdicionarItem([FromBody] ItemCarrinho item)
         {
@@ -26,27 +28,28 @@ namespace InventoryMaster.Controllers
         }
 
         // Remove um item do carrinho
+        [Authorize]
         [HttpDelete("remover-item/{itemId}")]
         public async Task<IActionResult> RemoverItem(int itemId)
         {
             var item = await _context.ItensCarrinho.FindAsync(itemId);
-            if (item == null) return NotFound();
+            if (item == null) return NotFound("Item não encontrado.");
             _context.ItensCarrinho.Remove(item);
             await _context.SaveChangesAsync();
             return NoContent();
         }
 
         // Finaliza o carrinho (gera uma venda)
+        [Authorize]
         [HttpPost("finalizar/{carrinhoId}")]
-        public async Task<IActionResult> FinalizarCarrinho(int carrinhoId)
+        public async Task<IActionResult> Finalizar(int carrinhoId)
         {
             var carrinho = await _context.Carrinhos
                 .Include(c => c.Itens)
                 .FirstOrDefaultAsync(c => c.Id == carrinhoId);
 
-            if (carrinho == null) return NotFound();
+            if (carrinho == null) return NotFound("Carrinho não encontrado.");
 
-            // Aqui você pode criar uma venda a partir do carrinho
             var venda = new Venda
             {
                 Data = System.DateTime.Now,
@@ -55,7 +58,6 @@ namespace InventoryMaster.Controllers
             };
             _context.Vendas.Add(venda);
 
-            // Opcional: Limpar ou marcar o carrinho como finalizado
             _context.Carrinhos.Remove(carrinho);
 
             await _context.SaveChangesAsync();
@@ -71,7 +73,7 @@ namespace InventoryMaster.Controllers
                 .ThenInclude(i => i.Produto)
                 .FirstOrDefault(c => c.Id == carrinhoId);
 
-            if (carrinho == null) return NotFound();
+            if (carrinho == null) return NotFound("Carrinho não encontrado.");
             return Ok(carrinho.Itens);
         }
     }

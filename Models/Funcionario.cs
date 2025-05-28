@@ -1,12 +1,25 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace InventoryMaster.Models
 {
     // Modelo que representa um funcionário no sistema
     public class Funcionario
     {
         public int Id { get; set; }
-        public string Name { get; set; } = string.Empty;
-        public string Role { get; set; } = string.Empty;
+
+        [Required]
+        [StringLength(100)]
+        public string Nome { get; set; } = string.Empty;
+
+        [Required]
+        [StringLength(50)]
+        public string Cargo { get; set; } = string.Empty;
+
+        [Required]
+        [StringLength(100)]
         public string Email { get; set; } = string.Empty;
-        public decimal Salary { get; set; }
+
+        [Range(0, double.MaxValue)]
+        public decimal Salario { get; set; }
     }
 }

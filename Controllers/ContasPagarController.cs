@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using InventoryMaster.Data;
 using InventoryMaster.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace InventoryMaster.Controllers
 {
@@ -21,29 +22,31 @@ namespace InventoryMaster.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public IActionResult ObterTodas()
         {
             return Ok(_context.ContasPagar.ToList());
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public IActionResult ObterPorId(int id)
         {
             var conta = _context.ContasPagar.Find(id);
-            if (conta == null) return NotFound();
+            if (conta == null) return NotFound("Conta a pagar não encontrada.");
             return Ok(conta);
         }
 
+        [Authorize]
         [HttpPost]
-        public IActionResult Create([FromBody] ContaPagar conta)
+        public IActionResult Criar([FromBody] ContaPagar conta)
         {
             _context.ContasPagar.Add(conta);
             _context.SaveChanges();
-            return CreatedAtAction(nameof(GetById), new { id = conta.Id }, conta);
+            return CreatedAtAction(nameof(ObterPorId), new { id = conta.Id }, conta);
         }
 
+        [Authorize]
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] ContaPagar conta)
+        public IActionResult Atualizar(int id, [FromBody] ContaPagar conta)
         {
             if (id != conta.Id) return BadRequest();
             _context.Entry(conta).State = EntityState.Modified;
@@ -51,11 +54,12 @@ namespace InventoryMaster.Controllers
             return NoContent();
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public IActionResult Remover(int id)
         {
             var conta = _context.ContasPagar.Find(id);
-            if (conta == null) return NotFound();
+            if (conta == null) return NotFound("Conta a pagar não encontrada.");
             _context.ContasPagar.Remove(conta);
             _context.SaveChanges();
             return NoContent();

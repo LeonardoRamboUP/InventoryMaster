@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace InventoryMaster.Models
 {
+    // Modelo que representa um produto no sistema
     public class Produto
     {
         public int Id { get; set; }
@@ -13,7 +14,7 @@ namespace InventoryMaster.Models
 
         [Required]
         [StringLength(50)]
-        public string SKU { get; set; } = string.Empty;
+        public string Codigo { get; set; } = string.Empty; 
 
         [Range(0, int.MaxValue)]
         public int Quantidade { get; set; }

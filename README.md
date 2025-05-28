@@ -53,7 +53,3 @@ A API utiliza JWT para autenticação. Para acessar rotas protegidas, obtenha um
    ```bash
    git clone https://github.com/LeonardoRamboUP/InventoryMaster.git
    ```
-
----
-
-## 🗂️ Estrutura do Projeto

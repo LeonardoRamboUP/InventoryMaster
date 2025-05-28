@@ -118,6 +118,3 @@ C:\Users\wilma\OneDrive\Área de Trabalho\ProjetoTerca\InventoryMaster\obj\Debug
 C:\Users\wilma\OneDrive\Área de Trabalho\ProjetoTerca\InventoryMaster\obj\Debug\net8.0\InventoryMaster.pdb
 C:\Users\wilma\OneDrive\Área de Trabalho\ProjetoTerca\InventoryMaster\obj\Debug\net8.0\InventoryMaster.genruntimeconfig.cache
 C:\Users\wilma\OneDrive\Área de Trabalho\ProjetoTerca\InventoryMaster\obj\Debug\net8.0\ref\InventoryMaster.dll
-C:\Users\wilma\OneDrive\Área de Trabalho\ProjetoTerca\InventoryMaster\bin\Debug\net8.0\Microsoft.Extensions.Caching.Abstractions.dll
-C:\Users\wilma\OneDrive\Área de Trabalho\ProjetoTerca\InventoryMaster\bin\Debug\net8.0\Microsoft.Extensions.Primitives.dll
-C:\Users\wilma\OneDrive\Área de Trabalho\ProjetoTerca\InventoryMaster\bin\Debug\net8.0\System.Diagnostics.DiagnosticSource.dll

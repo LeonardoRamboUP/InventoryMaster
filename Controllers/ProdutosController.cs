@@ -19,7 +19,7 @@ namespace InventoryMaster.Controllers
 
         // Retorna todos os produtos
         [HttpGet]
-        public IActionResult GetProdutos()
+        public IActionResult ObterTodos()
         {
             var produtos = _context.Produtos.ToList();
             return Ok(produtos);
@@ -27,15 +27,16 @@ namespace InventoryMaster.Controllers
 
         // Retorna um produto pelo ID
         [HttpGet("{id}")]
-        public IActionResult GetProduct(int id)
+        public IActionResult ObterPorId(int id)
         {
             var produto = _context.Produtos.Find(id);
-            return produto == null ? NotFound() : Ok(produto);
+            return produto == null ? NotFound("Produto não encontrado.") : Ok(produto);
         }
 
         // Cria um novo produto
+        [Authorize]
         [HttpPost]
-        public async Task<IActionResult> CreateProduct([FromBody] Produto produto)
+        public async Task<IActionResult> Criar([FromBody] Produto produto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -44,7 +45,7 @@ namespace InventoryMaster.Controllers
             {
                 _context.Produtos.Add(produto);
                 await _context.SaveChangesAsync();
-                return CreatedAtAction(nameof(GetProduct), new { id = produto.Id }, produto);
+                return CreatedAtAction(nameof(ObterPorId), new { id = produto.Id }, produto);
             }
             catch (Exception ex)
             {
@@ -53,8 +54,9 @@ namespace InventoryMaster.Controllers
         }
 
         // Atualiza um produto existente
+        [Authorize]
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateProduct(int id, [FromBody] Produto produto)
+        public async Task<IActionResult> Atualizar(int id, [FromBody] Produto produto)
         {
             if (id != produto.Id) return BadRequest();
 
@@ -64,41 +66,16 @@ namespace InventoryMaster.Controllers
         }
 
         // Remove um produto pelo ID
+        [Authorize]
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteProduct(int id)
+        public async Task<IActionResult> Remover(int id)
         {
             var produto = await _context.Produtos.FindAsync(id);
-            if (produto == null) return NotFound();
+            if (produto == null) return NotFound("Produto não encontrado.");
 
             _context.Produtos.Remove(produto);
             await _context.SaveChangesAsync();
             return NoContent();
-        }
-
-        // Busca produtos por nome
-        [HttpGet("search")]
-        public IActionResult SearchProducts([FromQuery] string nome)
-        {
-            var produtos = _context.Produtos
-                .Where(p => p.Nome.Contains(nome))
-                .ToList();
-            return Ok(produtos);
-        }
-
-        // Endpoint protegido por autenticação JWT
-        [Authorize]
-        [HttpGet("protegido")]
-        public IActionResult GetProtected()
-        {
-            return Ok("Você está autenticado!");
-        }
-
-        // Retorna o total de produtos cadastrados
-        [HttpGet("total")]
-        public IActionResult GetTotalProducts()
-        {
-            var total = _context.Produtos.Count();
-            return Ok(new { total });
         }
     }
 }

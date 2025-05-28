@@ -1,10 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using InventoryMaster.Data;
+using InventoryMaster.Models;
+
 namespace InventoryMaster.Controllers
 {
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore;
-    using InventoryMaster.Data;
-    using InventoryMaster.Models;
-
     [Route("api/[controller]")]
     [ApiController]
     public class FuncionariosController : ControllerBase
@@ -18,7 +19,7 @@ namespace InventoryMaster.Controllers
 
         // Retorna todos os funcionários
         [HttpGet]
-        public IActionResult GetFuncionarios()
+        public IActionResult ObterTodos()
         {
             var funcionarios = _context.Funcionarios.ToList();
             return Ok(funcionarios);
@@ -26,24 +27,26 @@ namespace InventoryMaster.Controllers
 
         // Retorna um funcionário pelo ID
         [HttpGet("{id}")]
-        public IActionResult GetFuncionario(int id)
+        public IActionResult ObterPorId(int id)
         {
             var funcionario = _context.Funcionarios.Find(id);
-            return funcionario == null ? NotFound() : Ok(funcionario);
+            return funcionario == null ? NotFound("Funcionário não encontrado.") : Ok(funcionario);
         }
 
         // Cria um novo funcionário
+        [Authorize]
         [HttpPost]
-        public async Task<IActionResult> CreateFuncionario([FromBody] Funcionario funcionario)
+        public async Task<IActionResult> Criar([FromBody] Funcionario funcionario)
         {
             _context.Funcionarios.Add(funcionario);
             await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetFuncionario), new { id = funcionario.Id }, funcionario);
+            return CreatedAtAction(nameof(ObterPorId), new { id = funcionario.Id }, funcionario);
         }
 
         // Atualiza um funcionário existente
+        [Authorize]
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateFuncionario(int id, [FromBody] Funcionario funcionario)
+        public async Task<IActionResult> Atualizar(int id, [FromBody] Funcionario funcionario)
         {
             if (id != funcionario.Id) return BadRequest();
 
@@ -53,11 +56,12 @@ namespace InventoryMaster.Controllers
         }
 
         // Remove um funcionário pelo ID
+        [Authorize]
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteFuncionario(int id)
+        public async Task<IActionResult> Remover(int id)
         {
             var funcionario = await _context.Funcionarios.FindAsync(id);
-            if (funcionario == null) return NotFound();
+            if (funcionario == null) return NotFound("Funcionário não encontrado.");
 
             _context.Funcionarios.Remove(funcionario);
             await _context.SaveChangesAsync();
